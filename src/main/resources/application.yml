@@ -1,0 +1,31 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: Users
+  config:
+    import:
+      - optional:config-server:http://localhost:8888
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/mydatabase
+    username: myuser
+    password: mypassword
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  cloud:
+    config:
+      profile: dev
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
