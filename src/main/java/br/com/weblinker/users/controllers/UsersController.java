@@ -1,51 +1,70 @@
 package br.com.weblinker.users.controllers;
 
+import br.com.weblinker.users.controllers.interfaces.UsersControllerInterface;
+import br.com.weblinker.users.dto.CreateUserRequest;
+import br.com.weblinker.users.dto.UpdateUserRequest;
+import br.com.weblinker.users.dto.UserResponse;
 import br.com.weblinker.users.models.User;
 import br.com.weblinker.users.services.UsersService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
-@Tag(name = "Users endpoints")
-public class UsersController {
+public class UsersController implements UsersControllerInterface {
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private UsersService usersService;
 
-    @Operation(summary = "Get all users")
     @GetMapping("")
-    public List<User> findAll() {
-        return usersService.findAll();
+    public List<UserResponse> findAll() {
+        List<User> users = usersService.findAll();
+
+        return users.stream()
+                .map(user -> modelMapper.map(user, UserResponse.class))
+                .collect(Collectors.toList());
     }
 
-    @Operation(summary = "Get user by ID")
     @GetMapping("/{userId}")
-    public User findById(@PathVariable Long userId) {
-        return usersService.findById(userId);
+    public UserResponse findById(@PathVariable Long userId) {
+
+        User user = usersService.findById(userId);
+
+        return modelMapper.map(user, UserResponse.class);
     }
 
-    @Operation(summary = "Create an user")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<UserResponse> create(@Valid @RequestBody CreateUserRequest userRequest) {
+
+        User user = modelMapper.map(userRequest, User.class);
         User createdUser = usersService.create(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        UserResponse userResponse = modelMapper.map(createdUser, UserResponse.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
-    @Operation(summary = "Update an user")
     @PutMapping("/{userId}")
-    public User update(@PathVariable Long userId, @RequestBody User user) {
-        return usersService.update(userId, user);
+    public UserResponse update(@PathVariable Long userId, @Valid @RequestBody UpdateUserRequest userRequest) {
+
+        User user = modelMapper.map(userRequest, User.class);
+        User updatedUser = usersService.update(userId, user);
+
+        return modelMapper.map(updatedUser, UserResponse.class);
     }
 
-    @Operation(summary = "Delete an user")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> delete(@PathVariable Long userId) {
         usersService.delete(userId);

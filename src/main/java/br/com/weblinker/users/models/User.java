@@ -26,6 +26,9 @@ public class User extends Auditable implements Serializable {
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
+    @Column(nullable = false, length = 100)
+    private String email;
+
     @Column(nullable = false, length = 20)
     private String phone;
 
@@ -67,6 +70,14 @@ public class User extends Auditable implements Serializable {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone() {

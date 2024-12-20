@@ -58,9 +58,10 @@ public class UsersService {
         LOG.info("Updating user " + user.getId() + "!");
 
         User entity = this.findById(userId);
-        entity.setFirstName(user.getFirstName());
-        entity.setLastName(user.getLastName());
-        entity.setPhone(user.getPhone());
+        entity.setFirstName(user.getFirstName() != null ? user.getFirstName() : entity.getFirstName());
+        entity.setLastName(user.getLastName() != null ? user.getLastName() : entity.getLastName());
+        entity.setEmail(user.getEmail() != null ? user.getEmail() : entity.getEmail());
+        entity.setPhone(user.getPhone() != null ? user.getPhone() : entity.getPhone());
 
         return usersRepository.save(entity);
     }
