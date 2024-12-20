@@ -16,12 +16,8 @@ import java.util.List;
 @Tag(name = "Users endpoints")
 public class UsersController {
 
-    private final UsersService usersService;
-
     @Autowired
-    public UsersController(UsersService usersService) {
-        this.usersService = usersService;
-    }
+    private UsersService usersService;
 
     @Operation(summary = "Get all users")
     @GetMapping("")
