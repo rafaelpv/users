@@ -14,6 +14,8 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,10 +30,10 @@ public class UsersService {
     private CompaniesRepository companiesRepository;
 
 
-    public List<User> findAll() {
+    public Page<User> findAll(Pageable pageable) {
         LOG.info("Finding all users!");
 
-        return usersRepository.findAll();
+        return usersRepository.findAll(pageable);
     }
 
 

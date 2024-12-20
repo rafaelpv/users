@@ -3,14 +3,16 @@ package br.com.weblinker.users.controllers.interfaces;
 import br.com.weblinker.users.dto.CreateUserRequest;
 import br.com.weblinker.users.dto.UpdateUserRequest;
 import br.com.weblinker.users.dto.UserResponse;
-import br.com.weblinker.users.models.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +35,26 @@ public interface UsersControllerInterface {
             )
         }
     )
+    @Parameters({
+        @Parameter(
+            name = "page",
+            description = "Page number (zero-based). Default is 0.",
+            schema = @Schema(type = "integer", example = "0", minimum = "0")
+        ),
+        @Parameter(
+            name = "size",
+            description = "Number of elements per page. Default is 10, maximum is 50.",
+            schema = @Schema(type = "integer", example = "10", minimum = "1", maximum = "50")
+        ),
+        @Parameter(
+            name = "sort",
+            description = "Sorting criteria in the format: `property,(asc|desc)`. Default direction is ascending. " +
+                    "Supported properties: `firstName`, `lastName`, `phone`, `email`, `id`.",
+            schema = @Schema(type = "string", example = "firstName,asc,email,desc")
+        )
+    })
     @GetMapping("")
-    public List<UserResponse> findAll();
+    public List<UserResponse> findAll(@Parameter(hidden = true) Pageable pageable);
 
     @Operation(summary = "Get user information by ID",
         description = "Fetches user details by user ID",

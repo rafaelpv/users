@@ -1,5 +1,10 @@
 server:
   port: 8080
+app:
+  pagination:
+    default-page: 0
+    default-size: 10
+    max-size: 50
 spring:
   application:
     name: Users

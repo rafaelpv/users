@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -39,10 +41,12 @@ public class UsersRestControllerUnitTest {
         User user = new User("John", "Doe", "123456789");
         List<User> allUsers = Arrays.asList(user);
 
-        given(usersService.findAll()).willReturn(allUsers);
+        Pageable pageable = Pageable.ofSize(10);
+
+        given(usersService.findAll(pageable)).willReturn((Page<User>) allUsers);
 
         mvc.perform(get("/users")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].firstName", is(user.getFirstName())));
