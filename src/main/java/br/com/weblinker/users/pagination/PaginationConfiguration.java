@@ -1,4 +1,4 @@
-package br.com.weblinker.users.components;
+package br.com.weblinker.users.pagination;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
