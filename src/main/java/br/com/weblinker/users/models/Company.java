@@ -9,8 +9,8 @@ import java.io.Serializable;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE companies SET deleted_at = NOW() WHERE id = ?")
-@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE \"companies\" SET \"deleted_at\" = NOW() WHERE \"id\" = ?")
+@Where(clause = "\"deleted_at\" IS NULL")
 @Table(name = "companies")
 public class Company extends Auditable implements Serializable {
 
@@ -24,6 +24,10 @@ public class Company extends Auditable implements Serializable {
     private String name;
 
     public Company() {
+    }
+
+    public Company(String name) {
+        this.name = name;
     }
 
     public Long getId() {

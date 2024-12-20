@@ -1,10 +1,16 @@
 package br.com.weblinker.users.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import br.com.weblinker.users.exceptions.NotFoundException;
+import br.com.weblinker.users.models.Company;
 import br.com.weblinker.users.models.User;
+import br.com.weblinker.users.repositories.CompaniesRepository;
 import br.com.weblinker.users.repositories.UsersRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +21,19 @@ public class UsersService {
 
     private final Logger LOG = LoggerFactory.getLogger(UsersService.class);
 
-    private final UsersRepository usersRepository;
+    @Autowired
+    private UsersRepository usersRepository;
 
     @Autowired
-    public UsersService(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
+    private CompaniesRepository companiesRepository;
+
 
     public List<User> findAll() {
         LOG.info("Finding all users!");
 
         return usersRepository.findAll();
     }
+
 
     public User findById(Long id) {
         return usersRepository.findById(id)
@@ -36,7 +43,13 @@ public class UsersService {
     public User create(User user) {
         LOG.info("Creating user!");
 
-        user.setCompanyId(1L);
+        // TODO here maybe we do not need this
+        Company company = companiesRepository.findFirstByOrderByIdAsc().orElse(null);
+        if (company == null) {
+            companiesRepository.save(new Company("My Company"));
+        }
+
+        user.setCompanyId(company.getId());
 
         return usersRepository.save(user);
     }
