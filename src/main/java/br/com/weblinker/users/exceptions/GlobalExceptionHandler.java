@@ -24,73 +24,45 @@ public class GlobalExceptionHandler {
     private Environment environment;
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ApiError> handleAllExceptions(
+    public final ResponseEntity<ApiError> handleUnexpectedException(
             Exception ex, HttpServletRequest request) {
 
         String message = isDebugMode() ? ex.getMessage() : "Server Internal Error";
         LOG.error("Internal Server Error: " + ex.getMessage());
 
-        ApiError error = new ApiError(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                message,
-                request.getRequestURI(),
-                request.getMethod()
-        );
-
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return this.getApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, message, request);
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<ApiError> handleUnauthorizedAccessException(
             UnauthorizedAccessException ex,
             HttpServletRequest request) {
-
-        ApiError error = new ApiError(
-                HttpStatus.FORBIDDEN.value(),
-                HttpStatus.FORBIDDEN.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                request.getMethod()
-        );
-
-        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+        return this.getApiErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), request);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ApiError> handleMethodNotSupportedException(
+    public ResponseEntity<ApiError> handleHttpRequestMethodNotSupportedException(
             HttpRequestMethodNotSupportedException ex,
             HttpServletRequest request) {
-
-        ApiError error = new ApiError(
-                HttpStatus.METHOD_NOT_ALLOWED.value(),
-                HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                request.getMethod()
-        );
-
-        return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
+        return this.getApiErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage(), request);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleResourceNotFoundException(
             ResourceNotFoundException ex,
             HttpServletRequest request) {
+        return this.getApiErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
 
-        ApiError error = new ApiError(
-                HttpStatus.NOT_FOUND.value(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                request.getMethod()
-        );
-
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgumentException(
+            IllegalArgumentException ex,
+            HttpServletRequest request) {
+        return this.getApiErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleValidationException(
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
 
@@ -99,31 +71,23 @@ public class GlobalExceptionHandler {
             details.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("; ");
         }
 
-        ApiError error = new ApiError(
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                details.toString().trim(),
-                request.getRequestURI(),
-                request.getMethod()
-        );
-
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return this.getApiErrorResponse(HttpStatus.BAD_REQUEST, details.toString().trim(), request);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiError> handleIllegalArgumentException(
-            IllegalArgumentException ex,
-            HttpServletRequest request) {
-
+    private ResponseEntity<ApiError> getApiErrorResponse(
+            HttpStatus status,
+            String message,
+            HttpServletRequest request
+            ) {
         ApiError error = new ApiError(
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                ex.getMessage(),
+                status.value(),
+                status.getReasonPhrase(),
+                message,
                 request.getRequestURI(),
                 request.getMethod()
         );
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(error, status);
     }
 
     private boolean isDebugMode() {
