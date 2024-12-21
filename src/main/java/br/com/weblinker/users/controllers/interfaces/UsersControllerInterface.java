@@ -3,11 +3,13 @@ package br.com.weblinker.users.controllers.interfaces;
 import br.com.weblinker.users.dto.CreateUserRequest;
 import br.com.weblinker.users.dto.UpdateUserRequest;
 import br.com.weblinker.users.dto.UserResponse;
+import br.com.weblinker.users.exceptions.ApiError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -61,7 +63,16 @@ public interface UsersControllerInterface {
         responses = {
             @ApiResponse(responseCode = "200", description = "User details", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)),
-            })
+            }),
+            @ApiResponse(
+                responseCode = "404",
+                description = "User not found",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ApiError.class),
+                    examples = @ExampleObject(value = ApiError.USER_NOT_FOUND)
+                )
+            )
         })
     public UserResponse findById(@PathVariable Long userId);
 
@@ -79,8 +90,12 @@ public interface UsersControllerInterface {
             ),
             @ApiResponse(
                 responseCode = "400",
-                description = "Invalid input",
-                content = @Content(mediaType = "application/json")
+                description = "Invalid user data provided",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ApiError.class),
+                    examples = @ExampleObject(value = ApiError.BAD_REQUEST)
+                )
             )
         }
     )
@@ -100,13 +115,21 @@ public interface UsersControllerInterface {
             ),
             @ApiResponse(
                 responseCode = "400",
-                description = "Invalid user data",
-                content = @Content(mediaType = "application/json")
+                description = "Invalid user data provided",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ApiError.class),
+                    examples = @ExampleObject(value = ApiError.BAD_REQUEST)
+                )
             ),
             @ApiResponse(
                 responseCode = "404",
                 description = "User not found",
-                content = @Content(mediaType = "application/json")
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ApiError.class),
+                    examples = @ExampleObject(value = ApiError.USER_NOT_FOUND)
+                )
             )
         }
     )
@@ -124,7 +147,11 @@ public interface UsersControllerInterface {
             @ApiResponse(
                 responseCode = "404",
                 description = "User not found",
-                content = @Content(mediaType = "application/json")
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ApiError.class),
+                    examples = @ExampleObject(value = ApiError.USER_NOT_FOUND)
+                )
             )
         }
     )
