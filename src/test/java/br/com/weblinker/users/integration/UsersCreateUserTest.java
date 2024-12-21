@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = UsersApplication.class)
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class UsersCreateUserTest extends AbstractUsersClass {
 
     @Test
-    public void whenValidInput_thenCreateEmployee() throws IOException, Exception {
+    public void whenValidInput_thenCreateUser() throws IOException, Exception {
         User user = new User("John", "Doe", "john@doe.com", "123456789");
         String userJson = objectMapper.writeValueAsString(user);
 
@@ -37,4 +38,33 @@ public class UsersCreateUserTest extends AbstractUsersClass {
         List<User> found = usersRepository.findAll();
         assertThat(found).extracting(User::getFirstName).containsOnly("John");
     }
+
+    @Test
+    public void whenInvalidInput_thenStatus400() throws Exception {
+        User user = new User("J", "Doe", "john@doe.com", "123456789");
+        String userJson = objectMapper.writeValueAsString(user);
+
+        mvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userJson))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    public void whenMissingInput_thenStatus400() throws Exception {
+        String userJson = """
+            {
+                "firstName": "John",
+                "email": "john@doe.com",
+                "phone": "123456789"
+            }
+            """;
+
+        mvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userJson))
+                .andExpect(status().isBadRequest());
+    }
+
 }

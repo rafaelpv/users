@@ -26,6 +26,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UsersGetAllUsersTest extends AbstractUsersClass {
 
     @Test
+    public void givenNoUsers_whenGetAllUsers_thenStatus200() throws Exception {
+        createDeletedTestUser("Zack", "Evans", "zack@evans.com", "999999999");
+
+        // @formatter:off
+        mvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(equalTo(0))));
+        // @formatter:on
+    }
+
+    @Test
     public void givenUsers_whenGetAllUsers_thenStatus200() throws Exception {
         createTestUser("John", "Doe", "john@doe.com", "123456789");
         createTestUser("Alice", "Smith", "alice@smith.com", "987654321");

@@ -36,7 +36,7 @@ public class AbstractUsersClass {
         usersRepository.deleteAll();
     }
 
-    protected void createTestUser(String firstName, String lastName, String email, String phone) {
+    protected User createTestUser(String firstName, String lastName, String email, String phone) {
         User user = new User(firstName, lastName, email, phone);
         Company company = companiesRepository.findFirstByOrderByIdAsc().orElse(null);
         if (company == null) {
@@ -44,9 +44,11 @@ public class AbstractUsersClass {
         }
         user.setCompanyId(company.getId());
         usersRepository.saveAndFlush(user);
+
+        return user;
     }
 
-    protected void createDeletedTestUser(String firstName, String lastName, String email, String phone) {
+    protected User createDeletedTestUser(String firstName, String lastName, String email, String phone) {
         User user = new User(firstName, lastName, email, phone);
         Company company = companiesRepository.findFirstByOrderByIdAsc().orElse(null);
         if (company == null) {
@@ -55,5 +57,7 @@ public class AbstractUsersClass {
         user.setCompanyId(company.getId());
         user.setDeletedAt(LocalDate.now().atStartOfDay());
         usersRepository.saveAndFlush(user);
+
+        return user;
     }
 }

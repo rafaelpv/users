@@ -1,4 +1,4 @@
-package br.com.weblinker.users;
+package br.com.weblinker.users.unit;
 
 import br.com.weblinker.users.controllers.UsersController;
 import br.com.weblinker.users.models.User;
@@ -36,7 +36,6 @@ public class UsersRestControllerUnitTest {
 
     @MockitoBean
     private UsersService usersService;
-
 
     @Test
     public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {

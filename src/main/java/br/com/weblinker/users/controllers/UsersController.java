@@ -34,7 +34,7 @@ public class UsersController implements UsersControllerInterface {
 
     @GetMapping("")
     public List<UserResponse> getAll(
-            @PageableDefault(page = 0, size = 10)
+            //@PageableDefault(page = 0, size = 10)
             @SortDefault.SortDefaults({
                 @SortDefault(sort = "firstName", direction = Sort.Direction.ASC)
             })
