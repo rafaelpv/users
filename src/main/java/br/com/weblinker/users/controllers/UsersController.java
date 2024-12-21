@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,10 @@ public class UsersController implements UsersControllerInterface {
             Pageable pageable) {
 
         Page<User> users = usersService.findAll(pageable);
+
+        if (users == null) {
+            return Collections.emptyList();
+        }
 
         return users.stream()
                 .map(user -> modelMapper.map(user, UserResponse.class))

@@ -77,7 +77,7 @@ public class UsersGetAllUsersTest extends AbstractUsersClass {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(equalTo(5))))
+                .andExpect(jsonPath("$", hasSize(equalTo(4))))
                 .andExpect(jsonPath("$[0].firstName", is("Alice")))
                 .andExpect(jsonPath("$[1].firstName", is("John")))
                 .andExpect(jsonPath("$[2].firstName", is("User3")))
@@ -126,8 +126,8 @@ public class UsersGetAllUsersTest extends AbstractUsersClass {
                 .andExpect(jsonPath("$[0].firstName", is("John")))
                 .andExpect(jsonPath("$[1].firstName", is("User5")))
                 .andExpect(jsonPath("$[2].firstName", is("User4")))
-                .andExpect(jsonPath("$[3].firstName", is("Alice")))
-                .andExpect(jsonPath("$[4].firstName", is("User6")));
+                .andExpect(jsonPath("$[3].firstName", is("User6")))
+                .andExpect(jsonPath("$[4].firstName", is("Alice")));
         // @formatter:on
     }
 }

@@ -1,13 +1,14 @@
 server:
   port: 8080
-app:
-  pagination:
-    default-page: 0
-    default-size: 2
-    max-size: 5
 spring:
   application:
     name: Users
+  data:
+    web:
+      pageable:
+        max-page-size: 5
+        default-page-size: 2
+        one-indexed-parameters: true
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb

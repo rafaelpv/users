@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,8 +44,9 @@ public class UsersRestControllerUnitTest {
         List<User> allUsers = Arrays.asList(user);
 
         Pageable pageable = Pageable.ofSize(10);
+        Page<User> usersPage = new PageImpl<>(allUsers, pageable, allUsers.size());
 
-        given(usersService.findAll(pageable)).willReturn((Page<User>) allUsers);
+        given(usersService.findAll(any(Pageable.class))).willReturn(usersPage);
 
         mvc.perform(get("/users")
                 .contentType(MediaType.APPLICATION_JSON))
