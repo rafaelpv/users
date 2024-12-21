@@ -56,7 +56,7 @@ public interface UsersControllerInterface {
         )
     })
     @GetMapping("")
-    public List<UserResponse> findAll(@Parameter(hidden = true) Pageable pageable);
+    public List<UserResponse> getAll(@Parameter(hidden = true) Pageable pageable);
 
     @Operation(summary = "Get user information by ID",
         description = "Fetches user details by user ID",
@@ -74,7 +74,7 @@ public interface UsersControllerInterface {
                 )
             )
         })
-    public UserResponse findById(@PathVariable Long userId);
+    public UserResponse getById(@PathVariable Long userId);
 
     @Operation(
         summary = "Create a new user",

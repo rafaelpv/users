@@ -38,7 +38,7 @@ public class UsersRestControllerUnitTest {
 
     @Test
     public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
-        User user = new User("John", "Doe", "123456789");
+        User user = new User("John", "Doe", "john@doe.com", "123456789");
         List<User> allUsers = Arrays.asList(user);
 
         Pageable pageable = Pageable.ofSize(10);

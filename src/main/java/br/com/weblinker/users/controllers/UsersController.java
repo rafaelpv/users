@@ -32,7 +32,7 @@ public class UsersController implements UsersControllerInterface {
     private UsersService usersService;
 
     @GetMapping("")
-    public List<UserResponse> findAll(
+    public List<UserResponse> getAll(
             @PageableDefault(page = 0, size = 10)
             @SortDefault.SortDefaults({
                 @SortDefault(sort = "firstName", direction = Sort.Direction.ASC)
@@ -47,7 +47,7 @@ public class UsersController implements UsersControllerInterface {
     }
 
     @GetMapping("/{userId}")
-    public UserResponse findById(@PathVariable Long userId) {
+    public UserResponse getById(@PathVariable Long userId) {
 
         User user = usersService.findById(userId);
 
