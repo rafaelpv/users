@@ -38,6 +38,7 @@ public class UsersController implements UsersControllerInterface {
                 @SortDefault(sort = "firstName", direction = Sort.Direction.ASC)
             })
             Pageable pageable) {
+
         Page<User> users = usersService.findAll(pageable);
 
         return users.stream()
@@ -59,7 +60,6 @@ public class UsersController implements UsersControllerInterface {
 
         User user = modelMapper.map(userRequest, User.class);
         User createdUser = usersService.create(user);
-
         UserResponse userResponse = modelMapper.map(createdUser, UserResponse.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
@@ -77,6 +77,7 @@ public class UsersController implements UsersControllerInterface {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> delete(@PathVariable Long userId) {
+
         usersService.delete(userId);
 
         return ResponseEntity.noContent().build();
