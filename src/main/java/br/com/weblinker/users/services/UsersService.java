@@ -1,16 +1,10 @@
 package br.com.weblinker.users.services;
 
-import java.util.List;
-import java.util.Optional;
-
-import br.com.weblinker.users.exceptions.NotFoundException;
+import br.com.weblinker.users.exceptions.ResourceNotFoundException;
 import br.com.weblinker.users.models.Company;
 import br.com.weblinker.users.models.User;
 import br.com.weblinker.users.repositories.CompaniesRepository;
 import br.com.weblinker.users.repositories.UsersRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +33,7 @@ public class UsersService {
 
     public User findById(Long id) {
         return usersRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found!"));
     }
 
     public User create(User user) {
