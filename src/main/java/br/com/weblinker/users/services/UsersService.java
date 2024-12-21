@@ -25,8 +25,6 @@ public class UsersService {
 
 
     public Page<User> findAll(Pageable pageable) {
-        LOG.info("Finding all users!");
-
         return usersRepository.findAll(pageable);
     }
 
@@ -37,7 +35,7 @@ public class UsersService {
     }
 
     public User create(User user) {
-        LOG.info("Creating user!");
+        LOG.info("Creating user: " + user);
 
         // TODO here maybe we do not need this
         Company company = companiesRepository.findFirstByOrderByIdAsc().orElse(null);
@@ -51,7 +49,7 @@ public class UsersService {
     }
 
     public User update(Long userId, User user) {
-        LOG.info("Updating user " + user.getId() + "!");
+        LOG.info("Updating user: ID " + user.getId() + ", Data: " + user);
 
         User entity = this.findById(userId);
         entity.setFirstName(user.getFirstName() != null ? user.getFirstName() : entity.getFirstName());
@@ -63,7 +61,7 @@ public class UsersService {
     }
 
     public void delete(Long userId) {
-        LOG.info("Deleting user " + userId + "!");
+        LOG.info("Deleting user: ID " + userId);
 
         User entity = this.findById(userId);
 
