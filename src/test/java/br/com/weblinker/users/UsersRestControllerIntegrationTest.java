@@ -59,7 +59,7 @@ public class UsersRestControllerIntegrationTest {
 
     @Test
     public void whenValidInput_thenCreateEmployee() throws IOException, Exception {
-        User user = new User("John", "Doe", "123456789");
+        User user = new User("John", "Doe", "john@doe.com", "123456789");
         String userJson = objectMapper.writeValueAsString(user);
 
         mvc.perform(post("/users")
@@ -72,9 +72,9 @@ public class UsersRestControllerIntegrationTest {
 
     @Test
     public void givenUsers_whenGetUsers_thenStatus200() throws Exception {
-        createTestUser("John", "Doe", "123456789");
-        createTestUser("Alice", "Smith", "987654321");
-        createDeletedTestUser("Zack", "Evans", "999999999");
+        createTestUser("John", "Doe", "john@doe.com", "123456789");
+        createTestUser("Alice", "Smith", "alice@smith.com", "987654321");
+        createDeletedTestUser("Zack", "Evans", "zack@evans.com", "999999999");
 
         // @formatter:off
         mvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON))
@@ -89,8 +89,8 @@ public class UsersRestControllerIntegrationTest {
 
     //
 
-    private void createTestUser(String firstName, String lastName, String phone) {
-        User user = new User(firstName, lastName, phone);
+    private void createTestUser(String firstName, String lastName, String email, String phone) {
+        User user = new User(firstName, lastName, email, phone);
         Company company = companiesRepository.findFirstByOrderByIdAsc().orElse(null);
         if (company == null) {
             company = companiesRepository.save(new Company("My Company"));
@@ -99,8 +99,8 @@ public class UsersRestControllerIntegrationTest {
         usersRepository.saveAndFlush(user);
     }
 
-    private void createDeletedTestUser(String firstName, String lastName, String phone) {
-        User user = new User(firstName, lastName, phone);
+    private void createDeletedTestUser(String firstName, String lastName, String email, String phone) {
+        User user = new User(firstName, lastName, email, phone);
         Company company = companiesRepository.findFirstByOrderByIdAsc().orElse(null);
         if (company == null) {
             company = companiesRepository.save(new Company("My Company"));

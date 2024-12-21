@@ -38,9 +38,10 @@ public class User extends Auditable implements Serializable {
     public User() {
     }
 
-    public User(String firstName, String lastName, String phone) {
+    public User(String firstName, String lastName, String email, String phone) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
         this.phone = phone;
     }
 
