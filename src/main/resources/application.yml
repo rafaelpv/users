@@ -20,9 +20,11 @@ spring:
       hibernate:
         jdbc:
           time_zone: UTC
-  cloud:
-    config:
-      profile: dev
+  #cloud:
+    #config:
+      #profile: dev
+  profiles:
+    active: dev
   data:
     web:
       pageable:

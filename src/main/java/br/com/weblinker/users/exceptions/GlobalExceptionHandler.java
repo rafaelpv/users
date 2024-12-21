@@ -27,10 +27,15 @@ public class GlobalExceptionHandler {
     public final ResponseEntity<ApiError> handleUnexpectedException(
             Exception ex, HttpServletRequest request) {
 
-        String message = isDebugMode() ? ex.getMessage() : "Server Internal Error";
-        LOG.error("Internal Server Error: " + ex.getMessage());
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        String debugMessage = "Message: " + ex.getMessage() + "; ";
+        debugMessage += "File: " + stackTrace[0].getFileName() + "; ";
+        debugMessage += "Line: " + stackTrace[0].getLineNumber() + "; ";
 
-        return this.getApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, message, request);
+        String responseMessage = isDebugMode() ? debugMessage : "Server Internal Error";
+        LOG.error("Internal Server Error: " + debugMessage);
+
+        return this.getApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, responseMessage, request);
     }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
