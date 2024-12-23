@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +24,8 @@ public class UsersService {
     @Autowired
     private CompaniesRepository companiesRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     public Page<User> findAll(Pageable pageable) {
         return usersRepository.findAll(pageable);
@@ -43,6 +46,7 @@ public class UsersService {
             companiesRepository.save(new Company("My Company"));
         }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCompanyId(company.getId());
 
         return usersRepository.save(user);

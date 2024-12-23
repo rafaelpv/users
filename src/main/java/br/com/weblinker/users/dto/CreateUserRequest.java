@@ -3,6 +3,7 @@ package br.com.weblinker.users.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class CreateUserRequest {
@@ -22,6 +23,12 @@ public class CreateUserRequest {
     @Schema(description = "User's e-mail", example = "john@doe.com")
     private String email;
 
+    @NotBlank(message = "Password is required")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}$",
+            message = "A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
+    @Schema(description = "User's password", example = "MyPassword1234*")
+    private String password;
+
     @NotBlank(message = "Phone number is required")
     @Size(min = 3, max = 20, message = "Phone number should have between 3 and 20 chars")
     @Schema(description = "User's phone", example = "+34999888777")
@@ -37,6 +44,10 @@ public class CreateUserRequest {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getPhone() {
