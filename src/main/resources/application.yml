@@ -8,9 +8,11 @@ spring:
       - optional:config-server:http://localhost:8888
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/mydatabase
+    url: jdbc:postgresql://localhost:5432/mydatabase2
     username: myuser
     password: mypassword
+  flyway:
+    enabled: true
   jpa:
     open-in-view: false
     hibernate:
