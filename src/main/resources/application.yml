@@ -30,6 +30,10 @@ spring:
       pageable:
         max-page-size: 50
         default-page-size: 10
+security:
+  jwt:
+    secret-key: 1a3f5e7a1043c51c7c58a78a008bdf67633c0c50622c551e9ad0acd162d10ec5
+    expiration-time: 3600000 # milliseconds
 management:
   endpoints:
     web:
