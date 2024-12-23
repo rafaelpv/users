@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
 
+@Getter
 public class CreateUserRequest {
 
     @NotBlank(message = "First name is required")
@@ -26,20 +28,4 @@ public class CreateUserRequest {
     @Size(min = 3, max = 20, message = "Phone number should have between 3 and 20 chars")
     @Schema(description = "User's phone", example = "+34999888777")
     private String phone;
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
 }
