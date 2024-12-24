@@ -1,5 +1,9 @@
 server:
   port: 8080
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 spring:
   application:
     name: Users
@@ -8,9 +12,9 @@ spring:
       - optional:config-server:http://localhost:8888
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/mydatabase2
-    username: myuser
-    password: mypassword
+    url: jdbc:postgresql://localhost:5432/users
+    username: docker
+    password: admin123
   flyway:
     enabled: true
   jpa:
@@ -38,3 +42,6 @@ management:
       exposure:
         include:
           - health
+springdoc:
+  api-docs:
+    path: users/v3/api-docs
