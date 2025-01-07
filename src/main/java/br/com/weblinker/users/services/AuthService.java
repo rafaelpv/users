@@ -32,14 +32,14 @@ public class AuthService {
     private JwtTokenProvider jwtTokenProvider;
 
     public TokenResponse login(LoginRequest data) {
-        logger.info("Trying to log user " + data.getUsername());
+        logger.info("Trying to log user " + data.getEmail());
         try {
-            String username = data.getUsername();
+            String username = data.getEmail();
             String password = data.getPassword();
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-            var user = usersRepository.findByUsername(username);
+            var user = usersRepository.findByEmail(username);
             if (user == null) {
                 throw new UsernameNotFoundException("Username " + username + " not found!");
             }
@@ -57,7 +57,7 @@ public class AuthService {
 
         logger.info("Trying to get refresh token for user " + username);
 
-        var user = usersRepository.findByUsername(username);
+        var user = usersRepository.findByEmail(username);
         if (user == null) {
             throw new UnauthorizedAccessException("Username " + username + " not found!");
         }
