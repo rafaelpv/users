@@ -42,23 +42,8 @@ public class User extends Auditable implements UserDetails {
     @Column(nullable = false, length = 20)
     private String phone;
 
-    @Column(name = "user_name", nullable = false, length = 100)
-    private String username;
-
     @Column(nullable = false, length = 255)
     private String password;
-
-    @Column(name = "account_non_expired")
-    private Boolean accountNonExpired;
-
-    @Column(name = "account_non_locked")
-    private Boolean accountNonLocker;
-
-    @Column(name = "credentials_non_expired")
-    private Boolean credentialsNonExpired;
-
-    @Column
-    private Boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -107,5 +92,10 @@ public class User extends Auditable implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return permissions;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 }
