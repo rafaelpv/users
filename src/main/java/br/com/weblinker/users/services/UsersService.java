@@ -10,10 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UsersService {
+public class UsersService implements UserDetailsService {
 
     private final Logger LOG = LoggerFactory.getLogger(UsersService.class);
 
@@ -23,11 +28,16 @@ public class UsersService {
     @Autowired
     private CompaniesRepository companiesRepository;
 
-
     public Page<User> findAll(Pageable pageable) {
         return usersRepository.findAll(pageable);
     }
 
+
+    public User findMe() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return (User) authentication.getPrincipal();
+    }
 
     public User findById(Long id) {
         return usersRepository.findById(id)
@@ -43,7 +53,7 @@ public class UsersService {
             companiesRepository.save(new Company("My Company"));
         }
 
-        user.setCompanyId(company.getId());
+        user.setCompany(company);
 
         return usersRepository.save(user);
     }
@@ -66,5 +76,15 @@ public class UsersService {
         User entity = this.findById(userId);
 
         usersRepository.delete(entity);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = usersRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found!");
+        }
+
+        return user;
     }
 }

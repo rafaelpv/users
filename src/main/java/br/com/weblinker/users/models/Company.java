@@ -7,7 +7,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -16,9 +16,7 @@ import java.io.Serializable;
 @Table(name = "companies")
 @Getter
 @Setter
-public class Company extends Auditable implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Company extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +24,9 @@ public class Company extends Auditable implements Serializable {
 
     @Column(nullable = false, length = 100)
     private String name;
+
+    @OneToMany(mappedBy = "company")
+    private List<User> users;
 
     public Company() {
     }
