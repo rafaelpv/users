@@ -42,7 +42,7 @@ public class AbstractUsersClass {
         if (company == null) {
             company = companiesRepository.save(new Company("My Company"));
         }
-        user.setCompanyId(company.getId());
+        user.setCompany(company);
         usersRepository.saveAndFlush(user);
 
         return user;
@@ -54,7 +54,7 @@ public class AbstractUsersClass {
         if (company == null) {
             company = companiesRepository.save(new Company("My Company"));
         }
-        user.setCompanyId(company.getId());
+        user.setCompany(company);
         user.setDeletedAt(LocalDate.now().atStartOfDay());
         usersRepository.saveAndFlush(user);
 

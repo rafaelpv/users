@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleUnauthorizedAccessException(
             UnauthorizedAccessException ex,
             HttpServletRequest request) {
-        return this.getApiErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), request);
+        return this.getApiErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -50,6 +51,13 @@ public class GlobalExceptionHandler {
             HttpRequestMethodNotSupportedException ex,
             HttpServletRequest request) {
         return this.getApiErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiError> handleNoResourceFoundExceptionException(
+            NoResourceFoundException ex,
+            HttpServletRequest request) {
+        return this.getApiErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +48,14 @@ public class UsersController implements UsersControllerInterface {
         return users.stream()
                 .map(user -> modelMapper.map(user, UserResponse.class))
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/me")
+    public UserResponse getMe() {
+
+        User user = usersService.findMe();
+
+        return modelMapper.map(user, UserResponse.class);
     }
 
     @GetMapping("/{userId}")

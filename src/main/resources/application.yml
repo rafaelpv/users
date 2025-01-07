@@ -45,3 +45,8 @@ management:
 springdoc:
   api-docs:
     path: users/v3/api-docs
+security:
+  jwt:
+    token:
+      secret-key: 53cr37
+      expire-length: 3600000
