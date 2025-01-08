@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -36,15 +35,17 @@ public class JwtTokenProvider {
 
     @PostConstruct
     public void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        if (secretKey.equals("default")) {
+            throw new IllegalStateException("The secret key must be configured and strong.");
+        }
         algorithm = Algorithm.HMAC256(secretKey.getBytes());
     }
 
-    public TokenResponse createAccessToken(String username, List<String> roles, Long companyId) {
+    public TokenResponse createAccessToken(String username, List<String> roles, Long companyId, Long userId) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
-        String accessToken = getAccessToken(username, roles, companyId, now, validity);
-        String refreshToken = getRefreshToken(username, roles, companyId, now);
+        String accessToken = getAccessToken(username, roles, companyId, userId, now, validity);
+        String refreshToken = getRefreshToken(username, roles, companyId, userId, now);
 
         return new TokenResponse(
                 username,
@@ -66,16 +67,18 @@ public class JwtTokenProvider {
         String username = decodedJWT.getSubject();
         List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
         Long companyId = decodedJWT.getClaim("companyId").asLong();
+        Long userId = decodedJWT.getClaim("userId").asLong();
 
-        return createAccessToken(username, roles, companyId);
+        return createAccessToken(username, roles, companyId, userId);
     }
 
 
-    public String getAccessToken(String username, List<String> roles, Long companyId, Date now, Date validity) {
+    public String getAccessToken(String username, List<String> roles, Long companyId, Long userId, Date now, Date validity) {
         String issuerURL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         return JWT.create()
                 .withClaim("roles", roles)
                 .withClaim("companyId", companyId)
+                .withClaim("userId", userId)
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
                 .withSubject(username)
@@ -84,11 +87,12 @@ public class JwtTokenProvider {
                 .trim();
     }
 
-    public String getRefreshToken(String username, List<String> roles, Long companyId, Date now) {
+    public String getRefreshToken(String username, List<String> roles, Long companyId, Long userId, Date now) {
         Date validity = new Date(now.getTime() + validityInMilliseconds * 3);
         return JWT.create()
                 .withClaim("roles", roles)
                 .withClaim("companyId", companyId)
+                .withClaim("userId", userId)
                 .withExpiresAt(validity)
                 .withSubject(username)
                 .sign(algorithm)

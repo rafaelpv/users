@@ -44,7 +44,7 @@ public class AuthService {
                 throw new UsernameNotFoundException("Username " + username + " not found!");
             }
 
-            return tokenProvider.createAccessToken(username, user.getRoles(), user.getCompany().getId());
+            return tokenProvider.createAccessToken(username, user.getRoles(), user.getCompany().getId(), user.getId());
         } catch (AuthenticationException e) {
             throw new UnauthorizedAccessException("Invalid username or password supplied!");
         }

@@ -48,5 +48,5 @@ springdoc:
 security:
   jwt:
     token:
-      secret-key: 53cr37
+      secret-key: yYp0XnYfPzagENtJKACn1R6c0aA4y45fb8nOMYAkz2U=
       expire-length: 3600000
