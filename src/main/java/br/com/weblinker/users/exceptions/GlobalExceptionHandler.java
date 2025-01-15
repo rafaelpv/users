@@ -1,6 +1,5 @@
 package br.com.weblinker.users.exceptions;
 
-import br.com.weblinker.users.services.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final Logger LOG = LoggerFactory.getLogger(UsersService.class);
+    private final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @Autowired
     private Environment environment;
