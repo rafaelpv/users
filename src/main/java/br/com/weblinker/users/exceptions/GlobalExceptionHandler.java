@@ -1,8 +1,7 @@
 package br.com.weblinker.users.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -16,9 +15,8 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
-
-    private final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @Autowired
     private Environment environment;
@@ -33,7 +31,7 @@ public class GlobalExceptionHandler {
         debugMessage += "Line: " + stackTrace[0].getLineNumber() + "; ";
 
         String responseMessage = isDebugMode() ? debugMessage : "Server Internal Error";
-        LOG.error("Internal Server Error: " + debugMessage);
+        log.error("Internal Server Error: " + debugMessage);
 
         return this.getApiErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, responseMessage, request);
     }

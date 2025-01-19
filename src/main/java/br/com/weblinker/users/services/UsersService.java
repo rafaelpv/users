@@ -5,8 +5,7 @@ import br.com.weblinker.users.models.Company;
 import br.com.weblinker.users.models.User;
 import br.com.weblinker.users.repositories.CompaniesRepository;
 import br.com.weblinker.users.repositories.UsersRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +17,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class UsersService implements UserDetailsService {
-
-    private final Logger LOG = LoggerFactory.getLogger(UsersService.class);
 
     @Autowired
     private UsersRepository usersRepository;
@@ -45,7 +43,7 @@ public class UsersService implements UserDetailsService {
     }
 
     public User create(User user) {
-        LOG.info("Creating user: " + user);
+        log.info("Creating user: {}", user);
 
         // TODO here maybe we do not need this
         Company company = companiesRepository.findFirstByOrderByIdAsc().orElse(null);
@@ -59,7 +57,7 @@ public class UsersService implements UserDetailsService {
     }
 
     public User update(Long userId, User user) {
-        LOG.info("Updating user: ID " + user.getId() + ", Data: " + user);
+        log.info("Updating user: ID {}, Data: {}", user.getId(), user);
 
         User entity = this.findById(userId);
         entity.setFirstName(user.getFirstName() != null ? user.getFirstName() : entity.getFirstName());
@@ -71,7 +69,7 @@ public class UsersService implements UserDetailsService {
     }
 
     public void delete(Long userId) {
-        LOG.info("Deleting user: ID " + userId);
+        log.info("Deleting user: ID {}", userId);
 
         User entity = this.findById(userId);
 
