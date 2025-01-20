@@ -6,6 +6,7 @@ import br.com.weblinker.users.exceptions.UnauthorizedAccessException;
 import br.com.weblinker.users.repositories.UsersRepository;
 import br.com.weblinker.users.security.jwt.JwtTokenProvider;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,6 +47,15 @@ public class AuthService {
             return tokenProvider.createAccessToken(username, user.getRoles(), user.getCompany().getId(), user.getId());
         } catch (AuthenticationException e) {
             throw new UnauthorizedAccessException("Invalid username or password supplied!");
+        }
+    }
+
+    public void logout(HttpServletRequest request) {
+        try {
+            String token = tokenProvider.resolveToken(request);
+            tokenProvider.addTokenToBlacklist(token);
+        } catch (AuthenticationException e) {
+            throw new UnauthorizedAccessException("Invalid token supplied!");
         }
     }
 

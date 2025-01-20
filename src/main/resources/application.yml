@@ -33,6 +33,9 @@ spring:
   profiles:
     active: dev
   data:
+    redis:
+      host: redis
+      port: 6379
     web:
       pageable:
         max-page-size: 50

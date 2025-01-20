@@ -67,6 +67,12 @@
 			<version>${java-jwt.version}</version>
 		</dependency>
 
+		<!-- Redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
 		<!-- Swagger Documentation -->
 		<dependency>
 			<groupId>org.springdoc</groupId>

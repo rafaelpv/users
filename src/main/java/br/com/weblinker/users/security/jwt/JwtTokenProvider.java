@@ -10,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +29,11 @@ public class JwtTokenProvider {
 
     @Value("${security.jwt.token.expire-length:default}")
     private Long validityInMilliseconds = 3_600_000L;
+
+    private static final String BLACKLIST_PREFIX = "blacklist:";
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -126,5 +133,16 @@ public class JwtTokenProvider {
         } catch (Exception e) {
             throw new UnauthorizedAccessException("Expired or invalid JWT token!");
         }
+    }
+
+    public void addTokenToBlacklist(String token) {
+        DecodedJWT decodedToken = decodedToken(token);
+        String key = BLACKLIST_PREFIX + decodedToken.getId();
+        long expirationInSeconds = getTokenExpirationInSeconds(decodedToken);
+        redisTemplate.opsForValue().set(key, "blacklisted", Duration.ofSeconds(expirationInSeconds));
+    }
+
+    public long getTokenExpirationInSeconds(DecodedJWT decodedToken) {
+        return decodedToken.getExpiresAt().getTime() / 1000;
     }
 }

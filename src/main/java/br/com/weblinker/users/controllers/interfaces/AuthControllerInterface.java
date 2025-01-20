@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Authentication endpoints", description = "Endpoints for user authentication and token management")
@@ -38,6 +40,27 @@ public interface AuthControllerInterface {
         }
     )
     TokenResponse login(@Valid @RequestBody LoginRequest data);
+
+    @Operation(
+        summary = "User logout",
+        description = "Logs out the user by invalidating their current session, effectively removing the access token and refresh token from the user's context.",
+        responses = {
+            @ApiResponse(
+                responseCode = "204",
+                description = "User logged out successfully",
+                content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                responseCode = "401",
+                description = "Invalid token supplied!",
+                content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ApiError.class)
+                )
+            )
+        }
+    )
+    ResponseEntity<Void> logout(HttpServletRequest request);
 
     @Operation(
         summary = "Refresh token",
